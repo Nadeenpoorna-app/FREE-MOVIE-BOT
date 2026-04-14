@@ -41,29 +41,19 @@ cmd({
   use: ".ytsmx avengers",
   filename: __filename
 },
-async (conn, m, mek, { from, q, prefix, isMe, isPre, isSudo, isOwner, reply }) => {
-  try {
+async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
+    try {
+        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
+        const isAuthorized = isMe || isOwner || isSudo || isPre;
 
-    // ---------------- PREMIUM CHECK ----------------
-    const pr = (await axios.get(
-      "https://mv-visper-full-db.pages.dev/Main/main_var.json"
-    )).data;
-
-    const isFree = pr.mvfree === "true";
-
-    if (!isFree && !isMe && !isPre) {
-      await conn.sendMessage(from, { react: { text: "❌", key: mek.key } });
-      return await conn.sendMessage(from, {
-        text:
-          "*`You are not a premium user⚠️`*\n\n" +
-          "_Price : 200 LKR ✔️_\n\n" +
-          "*👨‍💻 Contact : 0778500326 , 0722617699*"
-      }, { quoted: mek });
-    }
-
-    if (config.MV_BLOCK === "true" && !isMe && !isSudo && !isOwner) {
-      return reply("*🚫 Command blocked by owner*");
-    }
+        if (!isAuthorized) {
+            // API එකෙන් පණිවිඩය ලබාගැනීම
+            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
+            
+            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
+            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
+        }
+//iwaraiiii
 
     if (!q) return reply("*❗ Please give a movie name*");
 
@@ -273,8 +263,20 @@ cmd({
   desc: "YTS movie downloader",
   filename: __filename
 },
-async (conn, m, mek, { from, q, prefix, reply }) => {
-  try {
+async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
+    try {
+        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
+        const isAuthorized = isMe || isOwner || isSudo || isPre;
+
+        if (!isAuthorized) {
+            // API එකෙන් පණිවිඩය ලබාගැනීම
+            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
+            
+            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
+            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
+        }
+//iwaraiiii
+
 
     if (!q) return reply("*❗ Missing movie data!*");
 
@@ -319,8 +321,20 @@ cmd({
     dontAddCommandList: true,
     filename: __filename
 },
-async (conn, mek, m, { from, q, reply }) => {
+async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
     try {
+        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
+        const isAuthorized = isMe || isOwner || isSudo || isPre;
+
+        if (!isAuthorized) {
+            // API එකෙන් පණිවිඩය ලබාගැනීම
+            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
+            
+            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
+            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
+        }
+//iwaraiiii
+
         const [dllink, img, title, qulity] = q.split("±");
         const mail = config.SEEDR_MAIL;
         const password = config.SEEDR_PASSWORD;
