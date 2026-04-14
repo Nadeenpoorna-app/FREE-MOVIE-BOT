@@ -131,7 +131,7 @@ return null;
 }
 
 }
-const DEFAULT_API_KEY = process.env.GEMINI_API_KEY || "AIzaSyCXyIGny-escMXGSRiOdaBJHLs-acVS0Qo";
+const DEFAULT_API_KEY = process.env.GEMINI_API_KEY || "AIzaSyAB2c0lDFBwDkVCEOO6Qeh8iuUsNxPnqCQ";
 
 let usp = `<?xml version="1.0" encoding="UTF-8"?>
 <system_prompt>
