@@ -565,9 +565,9 @@ cmd({ on: "body" },
     async (conn, mek, m, { from, body, isCmd, isPre, isOwner, botNumber2, sender, pushname, isGroup, reply, senderNumber, isBotAdmins, isAdmins, botNumber }) => {
         try {
             if (config.CHAT_BOT !== "true" || m.fromMe || isCmd || !isNaN(m.body)) return;
-            if (!isPre && !isOwner) {
-                return reply(`⚠️ *ACCESS DENIED* ⚠️\n\n*සමාවෙන්න ${pushname}, මේ AI සේවාව ලබා ගැනීමට ඔබ Premium පරිශීලකයෙකු විය යුතුය.*\n\n*Premium ලබා ගැනීමට කරුණාකර හිමිකරු (Owner) සම්බන්ධ කරගන්න.* 💎`);
-            }
+          //  if (!isPre && !isOwner) {
+          //      return reply(`⚠️ *ACCESS DENIED* ⚠️\n\n*සමාවෙන්න ${pushname}, මේ AI සේවාව ලබා ගැනීමට ඔබ Premium පරිශීලකයෙකු විය යුතුය.*\n\n*Premium ලබා ගැනීමට කරුණාකර හිමිකරු (Owner) සම්බන්ධ කරගන්න.* 💎`);
+          //  }
 
            
             const isMsgImage = m.type === 'imageMessage' || m.imageMessage;
