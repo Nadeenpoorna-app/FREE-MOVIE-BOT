@@ -16,7 +16,7 @@ SUDO: '',//
 DB_NAME: 'movie-xx-free',
 LANG: 'SI',
 OWNER_NUMBER: '94716769285',
-GITHUB_TOKEN: process.env.GITHUB_TOKEN || "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",
+GITHUB_TOKEN: process.env.GITHUB_TOKEN || "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",
 
 };
 //GITHUB_AUTH_TdOKEN: 'ouvnI0xSDsmfWA1filVxx.SZ0vJGYkjlC5VX54U0e10',
