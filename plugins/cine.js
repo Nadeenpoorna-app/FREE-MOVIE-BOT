@@ -147,123 +147,113 @@ async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) =
 cmd({
   pattern: "cinedl",
   react: "🎥",
-category: "movie",
+  category: "movie",
   desc: "movie downloader",
   filename: __filename
 },
 async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
     try {
-       
+        if (!q || !q.includes("movies"))
+            return reply("*❗ Please use movie link only!*");
 
-    if (!q || !q.includes("movies"))
-      return reply("*❗ Please use movie link only!*");
-console.log(`🧿Input`,q)
-    const [title, url, img] = q.split("±");
+        console.log(`🧿Input`, q);
+        const [title, url, img] = q.split("±");
 
-    const infoAPI =
-      `https://api-dark-shan-yt.koyeb.app/movie/cinesubz-info?url=${encodeURIComponent(url)}&apikey=${key}`;
-    const data = (await axios.get(infoAPI)).data;
-    const d = data.data;
+        const infoAPI = `https://api-dark-shan-yt.koyeb.app/movie/cinesubz-info?url=${encodeURIComponent(url)}&apikey=${key}`;
+        const data = (await axios.get(infoAPI)).data;
+        const d = data.data;
 
-    const directors =
-      (d.directors || "").replace(/Director:?/gi, "").trim();
+        const directors = (d.directors || "").replace(/Director:?/gi, "").trim();
 
-    let msg =
-`*_▫🍿 Title ➽ ${d.title}_*
+        let msg = `*_▫🍿 Title ➽ ${d.title}_*\n\n▫📅 Year ➽ ${d.year}\n▫⭐ IMDB ➽ ${d.rating}\n▫⏳ Runtime ➽ ${d.duration}\n▫🌎 Country ➽ ${d.country}\n▫💎 Quality ➽ ${d.quality}\n▫🕵️ Director ➽ ${directors}\n▫🔉 Language ➽ ${d.tag}\n`;
 
-▫📅 Year ➽ ${d.year}
-▫⭐ IMDB ➽ ${d.rating}
-▫⏳ Runtime ➽ ${d.duration}
-▫🌎 Country ➽ ${d.country}
-▫💎 Quality ➽ ${d.quality}
-▫🕵️ Director ➽ ${directors}
-▫🔉 Language ➽ ${d.tag}
-`;
+        // ================= BUTTON MODE (List View) =================
+        if (config.BUTTON === "true") {
+            let rows = [];
 
-    // ================= BUTTON MODE =================
-    if (config.BUTTON === "true") {
+            // මුලින්ම Movie Details Button එක එකතු කරනවා
+            rows.push({
+                title: "📄 Movie Details",
+                id: `${prefix}ctdetails ±±${url}±${img}±${d.title}`
+            });
 
-      let rows = d.downloads.map(v => ({
-        title: `${v.size} (${v.quality})`,
-        id: `${prefix}paka ${img}±${v.link}±${d.title}±${v.quality}`
-      }));
+            // 2GB ට අඩු download links පමණක් filter කර rows වලට එකතු කරනවා
+            d.downloads.forEach(v => {
+                let isLarge = v.size.includes('GB') && parseFloat(v.size) >= 2.0;
+                if (!isLarge) {
+                    rows.push({
+                        title: `${v.size} (${v.quality})`,
+                        id: `${prefix}paka ${img}±${v.link}±${d.title}±${v.quality}`
+                    });
+                }
+            });
 
-      rows.unshift({
-        title: "📄 Movie Details",
-        id: `${prefix}ctdetails ±±${url}±${img}±${d.title}`
-      });
+            const listButtons = {
+                title: "🎬 Choose Option",
+                sections: [{
+                    title: "Available Links",
+                    rows
+                }]
+            };
 
-      const listButtons = {
-        title: "🎬 Choose Option",
-        sections: [{
-          title: "Available Links",
-          rows
-        }]
-      };
+            await conn.sendMessage(from, {
+                image: { url: img },
+                caption: msg,
+                footer: config.FOOTER,
+                buttons: [{
+                    buttonId: "download_list",
+                    buttonText: { displayText: "⬇️ Download" },
+                    type: 4,
+                    nativeFlowInfo: {
+                        name: "single_select",
+                        paramsJson: JSON.stringify(listButtons)
+                    }
+                }],
+                headerType: 1,
+                viewOnce: true
+            }, { quoted: mek });
 
-      await conn.sendMessage(from, {
-        image: { url: img },
-        caption: msg,
-        footer: config.FOOTER,
-        buttons: [{
-          buttonId: "download_list",
-          buttonText: { displayText: "⬇️ Download" },
-          type: 4,
-          nativeFlowInfo: {
-            name: "single_select",
-            paramsJson: JSON.stringify(listButtons)
-          }
-        }],
-        headerType: 1,
-        viewOnce: true
-      }, { quoted: mek });
+        }
+        // ================= OLD MODE (Normal Buttons) =================
+        else {
+            let buttons = [];
 
+            buttons.push({
+                buttonId: `${prefix}ctdetails ±±${url}±${img}±${d.title}`,
+                buttonText: { displayText: "Movie Details\n" },
+                type: 1
+            });
+
+            d.downloads.forEach(v => {
+                // මෙතනදීත් 2GB check එක සිදු කරනවා
+                let isLarge = v.size.includes('GB') && parseFloat(v.size) >= 2.0;
+
+                if (!isLarge) {
+                    buttons.push({
+                        buttonId: `${prefix}paka ${img}±${v.link}±${d.title}±${v.quality}`,
+                        buttonText: { 
+                            displayText: `${v.size} (${v.quality})`
+                                .replace(/WEBDL|WEB DL|BluRay HD|BluRay SD|BluRay FHD|Telegram BluRay SD|Telegram BluRay HD|Direct BluRay SD|Direct BluRay HD|Direct BluRay FHD|FHD|HD|SD|Telegram BluRay FHD/gi, "")
+                                .trim() 
+                        },
+                        type: 1
+                    });
+                }
+            });
+
+            await conn.buttonMessage(from, {
+                image: { url: img },
+                caption: msg,
+                footer: config.FOOTER,
+                buttons,
+                headerType: 4
+            }, mek);
+        }
+
+    } catch (e) {
+        console.log(e);
+        reply("*Error ❗*");
     }
-    // ================= OLD MODE =================
-    else {
-
-      let buttons = [];
-
-      buttons.push({
-        buttonId: `${prefix}ctdetails ±±${url}±${img}±${d.title}`,
-        buttonText: { displayText: "Movie Details\n" },
-        type: 1
-      });
-
-      d.downloads.forEach(v => {
-        buttons.push({
-          buttonId: `${prefix}paka ${img}±${v.link}±${d.title}±${v.quality}`,
-          buttonText: { displayText: `${v.size} (${v.quality})`.replace("WEBDL", "")
-	     .replace("WEB DL", "")
-        .replace("BluRay HD", "") 
-	.replace("BluRay SD", "") 
-	.replace("BluRay FHD", "") 
-	.replace("Telegram BluRay SD", "") 
-	.replace("Telegram BluRay HD", "") 
-		.replace("Direct BluRay SD", "") 
-		.replace("Direct BluRay HD", "") 
-		.replace("Direct BluRay FHD", "") 
-		.replace("FHD", "") 
-		.replace("HD", "") 
-		.replace("SD", "") 
-		.replace("Telegram BluRay FHD", "") },
-          type: 1
-        });
-      });
-
-      await conn.buttonMessage(from, {
-        image: { url: img },
-        caption: msg,
-        footer: config.FOOTER,
-        buttons,
-        headerType: 4
-      }, mek);
-    }
-
-  } catch (e) {
-    console.log(e);
-    reply("*Error ❗*");
-  }
 });
 
 
