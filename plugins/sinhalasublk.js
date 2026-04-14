@@ -44,17 +44,7 @@ cmd({
 },
 async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
     try {
-        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
-        const isAuthorized = isMe || isOwner || isSudo || isPre;
-
-        if (!isAuthorized) {
-            // API එකෙන් පණිවිඩය ලබාගැනීම
-            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
-            
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
-        }
-//iwaraiiii
+       
 
 
        
@@ -156,18 +146,7 @@ cmd({
 },
 async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
     try {
-        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
-        const isAuthorized = isMe || isOwner || isSudo || isPre;
-
-        if (!isAuthorized) {
-            // API එකෙන් පණිවිඩය ලබාගැනීම
-            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
-            
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
-        }
-//iwaraiiii
-
+       
 
     if (!q) return reply("🚩 *Please give me a valid movie URL!*");
 
@@ -324,17 +303,7 @@ cmd({
     }
 console.log(`Input:`, q)
     try {
-		 // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
-        const isAuthorized = isMe || isOwner || isSudo || isPre;
-
-        if (!isAuthorized) {
-            // API එකෙන් පණිවිඩය ලබාගැනීම
-            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
-            
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
-        }
-//iwaraiiii
+		 
         //===================================================
         const [pix, imglink, title, qulity] = q.split("±");
         if (!pix || !imglink || !title || !qulity) return await reply("⚠️ Invalid format. Use:\n`sindl link±img±title±$quality`");
