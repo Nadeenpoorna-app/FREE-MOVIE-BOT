@@ -51,17 +51,7 @@ cmd({
 },
 async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
     try {
-        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
-        const isAuthorized = isMe || isOwner || isSudo || isPre;
-
-        if (!isAuthorized) {
-            // API එකෙන් පණිවිඩය ලබාගැනීම
-            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
-            
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
-        }
-//iwaraiiii
+       
 
 
     if (!q) return reply("*❗ Please give a movie name*");
@@ -163,17 +153,7 @@ category: "movie",
 },
 async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
     try {
-        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
-        const isAuthorized = isMe || isOwner || isSudo || isPre;
-
-        if (!isAuthorized) {
-            // API එකෙන් පණිවිඩය ලබාගැනීම
-            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
-            
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
-        }
-//iwaraiiii
+       
 
     if (!q || !q.includes("movies"))
       return reply("*❗ Please use movie link only!*");
@@ -298,17 +278,7 @@ cmd({
 },
 async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
     try {
-        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
-        const isAuthorized = isMe || isOwner || isSudo || isPre;
-
-        if (!isAuthorized) {
-            // API එකෙන් පණිවිඩය ලබාගැනීම
-            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
-            
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
-        }
-//iwaraiiii
+      
 
     if (!q || !q.includes("tvshows"))
       return reply("*❗ Please use a valid TV Show link!*");
@@ -652,17 +622,7 @@ async (conn, mek, m, { from, q, isSudo,isOwner,isMe,isPre, reply }) => {
 
 	 try {
 		// isUploading = false;
-        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
-        const isAuthorized = isMe || isOwner || isSudo || isPre;
-
-        if (!isAuthorized) {
-            // API එකෙන් පණිවිඩය ලබාගැනීම
-            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
-            
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
-        }
-//iwaraiiii
+        
 
   if (!q) return reply("*❗ Missing download data!*");
   if (isUploading) return reply("*⏳ Another upload is in progress…*");
@@ -1070,17 +1030,7 @@ cmd({
 },
 async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
     try {
-        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
-        const isAuthorized = isMe || isOwner || isSudo || isPre;
-
-        if (!isAuthorized) {
-            // API එකෙන් පණිවිඩය ලබාගැනීම
-            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
-            
-            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
-        }
-//iwaraiiii
+       
 
 
     if (!q) return await reply("*❗ Please provide a movie link!*");
