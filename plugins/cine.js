@@ -220,51 +220,53 @@ console.log(`🧿Input`,q)
 
     }
     // ================= OLD MODE =================
-    else {
+   else {
+    let buttons = [];
 
-      let buttons = [];
-
-      buttons.push({
+    buttons.push({
         buttonId: `${prefix}ctdetails ±±${url}±${img}±${d.title}`,
         buttonText: { displayText: "Movie Details\n" },
         type: 1
-      });
+    });
 
-      d.downloads.forEach(v => {
-        buttons.push({
-          buttonId: `${prefix}paka ${img}±${v.link}±${d.title}±${v.quality}`,
-          buttonText: { displayText: `${v.size} (${v.quality})`.replace("WEBDL", "")
-	     .replace("WEB DL", "")
-        .replace("BluRay HD", "") 
-	.replace("BluRay SD", "") 
-	.replace("BluRay FHD", "") 
-	.replace("Telegram BluRay SD", "") 
-	.replace("Telegram BluRay HD", "") 
-		.replace("Direct BluRay SD", "") 
-		.replace("Direct BluRay HD", "") 
-		.replace("Direct BluRay FHD", "") 
-		.replace("FHD", "") 
-		.replace("HD", "") 
-		.replace("SD", "") 
-		.replace("Telegram BluRay FHD", "") },
-          type: 1
-        });
-      });
+    d.downloads.forEach(v => {
+        // File size එක GB ද කියලා බලනවා සහ ඒක 2 ට වඩා අඩුයිද කියලා check කරනවා
+        let isLarge = v.size.includes('GB') && parseFloat(v.size) >= 2.0;
 
-      await conn.buttonMessage(from, {
+        // ඉදිරියට යන්නේ 2GB ට වඩා අඩු නම් විතරයි
+        if (!isLarge) {
+            buttons.push({
+                buttonId: `${prefix}paka ${img}±${v.link}±${d.title}±${v.quality}`,
+                buttonText: { 
+                    displayText: `${v.size} (${v.quality})`
+                        .replace("WEBDL", "")
+                        .replace("WEB DL", "")
+                        .replace("BluRay HD", "") 
+                        .replace("BluRay SD", "") 
+                        .replace("BluRay FHD", "") 
+                        .replace("Telegram BluRay SD", "") 
+                        .replace("Telegram BluRay HD", "") 
+                        .replace("Direct BluRay SD", "") 
+                        .replace("Direct BluRay HD", "") 
+                        .replace("Direct BluRay FHD", "") 
+                        .replace("FHD", "") 
+                        .replace("HD", "") 
+                        .replace("SD", "") 
+                        .replace("Telegram BluRay FHD", "") 
+                },
+                type: 1
+            });
+        }
+    });
+
+    await conn.buttonMessage(from, {
         image: { url: img },
         caption: msg,
         footer: config.FOOTER,
         buttons,
         headerType: 4
-      }, mek);
-    }
-
-  } catch (e) {
-    console.log(e);
-    reply("*Error ❗*");
-  }
-});
+    }, mek);
+}
 
 
 // ------------------ CINETVDL ------------------
