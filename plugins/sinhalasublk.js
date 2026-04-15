@@ -295,6 +295,18 @@ cmd({
     dontAddCommandList: true,
     filename: __filename
 }, async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) => {
+    try {
+        // 🧩 Sudo, Owner, Me හෝ Premium නම් පමණක් අවසර ඇත
+        const isAuthorized = isMe || isOwner || isSudo || isPre;
+
+        if (!isAuthorized) {
+            // API එකෙන් පණිවිඩය ලබාගැනීම
+            const { data } = await axios.get('https://nadeen-botzdatabse.vercel.app/data.json');
+            
+            await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
+            return await conn.sendMessage(from, { text: data.freemsg }, { quoted: mek });
+        }
+//iwaraiiii
     if (isUploadinggg) {
         return await conn.sendMessage(from, { 
             text: '*A movie is already being uploaded. Please wait until it finishes.* ⏳', 
