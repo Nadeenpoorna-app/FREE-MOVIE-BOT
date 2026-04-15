@@ -600,106 +600,88 @@ const res = response.data;
 
 
 
-let isUploading = false;
+ let isUploading = false; 
 
-cmd({
-  pattern: "paka",
-  react: "⬇️",
-  dontAddCommandList: true,
-  filename: __filename
-},
-async (conn, mek, m, { from, q, isSudo,isOwner,isMe,isPre, reply }) => {
-
-	 try {
-		
-isUploading = true;
-  if (!q) return reply("*❗ Missing download data!*");
-  if (isUploading) return reply("*⏳ Another upload is in progress…*");
-
- // try {
-   
-
-    console.log(`🤹🏼‍♂️ Final-dl:`, q);
-
-    // q → img ± url ± title ± quality
-    const [img, url, title, quality] = q.split("±");
-
-    // Fetch download list
-    const finalAPI =
-      `https://api-dark-shan-yt.koyeb.app/movie/cinesubz-download?url=${encodeURIComponent(url)}&apikey=${key}`;
-
-    const data = (await axios.get(finalAPI)).data;
-
-    const downloads = data?.data?.download;
-    if (!downloads) return reply("*❌ No download links found!*");
-
-    // ============================================
-    // 🔥 SELECT BEST LINK (cloud → pix fallback)
-    // ============================================
-    let finalLink = null;
-
-    // Remove Telegram links completely
-    const filtered = downloads.filter(v => v.name !== "telegram");
-
-    // 1) Try "cloud"
-    const cloud = filtered.find(v => v.name === "unknown");
-    if (cloud) finalLink = cloud.url;
-
-	  if (!finalLink) {
-	  const pix = filtered.find(v => v.name === "pix");
-    if (pix) finalLink = pix.url;
-	  }
-
-    // 2) Else try pix
-    if (!finalLink) {
-      const gdrive = filtered.find(v => v.name === "gdrive");
-      const GLink = gdrive.url;
-let res = await fg.gdrive(GLink.replace('https://drive.usercontent.google.com/download?id=', 'https://drive.google.com/file/d/').replace('&export=download' , '/view'))
-
-if (gdrive) finalLink = res.downloadUrl;
-    }
-
-    if (!finalLink)
-      return reply("*❌ Valid download link not found!*");
-
-    // Send uploading message
-    const upmsg = await conn.sendMessage(from, { text: "*⬆️ Uploading movie...*" });
-
-    console.log(`link:`, finalLink)
-
-//https://i.ibb.co/m1fg0Cx/IMG-20251031-WA0012.jpg
-	 const botimg = img;
-async function resizeImage(buffer, width, height) {
-  return await sharp(buffer)
-    .resize(width, height)
-    .toBuffer();
-}
-	  const botimgUrl = botimg;
-        const botimgResponse = await fetch(botimgUrl);
-        const botimgBuffer = await botimgResponse.buffer();
+cmd({ 
+    pattern: "paka", 
+    react: "⬇️", 
+    dontAddCommandList: true, 
+    filename: __filename 
+}, async (conn, mek, m, { from, q, isSudo, isOwner, isMe, isPre, reply }) => { 	 
+    try { 		 
+        // 1. මුලින්ම check කරන්න දැනට upload එකක් යනවද කියලා
+        if (isUploading) return reply("*⏳ Another upload is in progress… Please wait!*"); 
         
-        // Resize image to 200x200 before sending
-        const resizedBotImg = await resizeImage(botimgBuffer, 200, 200); 
-	  
-    await conn.sendMessage(config.JID || from, {
-      document: { url: finalLink },
-      mimetype: "video/mp4",
-      caption: `🎬 *${title}*\n\n\`[${quality}]\`\n\n★━━━━━━━━✩━━━━━━━━★\n\n> *•ɴᴀᴅᴇᴇɴ-ᴍᴅ•*`,
-      jpegThumbnail: resizedBotImg,
-      fileName: `〽${title}.mp4`
-    });
+        if (!q) return reply("*❗ Missing download data!*"); 
 
-    await conn.sendMessage(from, { delete: upmsg.key });
-    await conn.sendMessage(from, {
-      react: { text: '✔️', key: mek.key }
-    });
+        // 2. දැන් upload එක පටන් ගත්තා කියලා mark කරන්න
+        isUploading = true; 
 
-  } catch (e) {
-    console.log("❌ paka error:", e);
-    reply("*❗ Error while downloading*");
-  }
+        console.log(`🤹🏼‍♂️ Final-dl:`, q); 
+        const [img, url, title, quality] = q.split("±"); 
 
- isUploading = false;
+        const finalAPI = `https://api-dark-shan-yt.koyeb.app/movie/cinesubz-download?url=${encodeURIComponent(url)}&apikey=${key}`; 
+        const data = (await axios.get(finalAPI)).data; 
+        const downloads = data?.data?.download; 
+
+        if (!downloads) {
+            isUploading = false; // error එකකදීත් reset කරන්න ඕනේ
+            return reply("*❌ No download links found!*"); 
+        }
+
+        let finalLink = null; 
+        const filtered = downloads.filter(v => v.name !== "telegram"); 
+
+        const cloud = filtered.find(v => v.name === "unknown"); 
+        if (cloud) finalLink = cloud.url; 	 
+
+        if (!finalLink) { 	 
+            const pix = filtered.find(v => v.name === "pix"); 
+            if (pix) finalLink = pix.url; 	 
+        } 
+
+        if (!finalLink) { 
+            const gdrive = filtered.find(v => v.name === "gdrive"); 
+            if (gdrive) {
+                const GLink = gdrive.url; 
+                let res = await fg.gdrive(GLink.replace('https://drive.usercontent.google.com/download?id=', 'https://drive.google.com/file/d/').replace('&export=download' , '/view')) 
+                finalLink = res.downloadUrl; 
+            }
+        } 
+
+        if (!finalLink) {
+            isUploading = false;
+            return reply("*❌ Valid download link not found!*"); 
+        }
+
+        const upmsg = await conn.sendMessage(from, { text: "*⬆️ Uploading movie...*" }); 
+
+        async function resizeImage(buffer, width, height) { 
+            return await sharp(buffer).resize(width, height).toBuffer(); 
+        } 	 
+
+        const botimgResponse = await fetch(img); 
+        const botimgBuffer = await botimgResponse.buffer(); 
+        const resizedBotImg = await resizeImage(botimgBuffer, 200, 200); 	 
+
+        await conn.sendMessage(config.JID || from, { 
+            document: { url: finalLink }, 
+            mimetype: "video/mp4", 
+            caption: `🎬 *${title}*\n\n\`[${quality}]\`\n\n★━━━━━━━━✩━━━━━━━━★\n\n> *•ɴᴀᴅᴇᴇɴ-ᴍᴅ•*`, 
+            jpegThumbnail: resizedBotImg, 
+            fileName: `〽${title}.mp4` 
+        }); 
+
+        await conn.sendMessage(from, { delete: upmsg.key }); 
+        await conn.sendMessage(from, { react: { text: '✔️', key: mek.key } }); 
+
+    } catch (e) { 
+        console.log("❌ paka error:", e); 
+        reply("*❗ Error while downloading*"); 
+    } finally {
+        // 3. වැඩේ ඉවර වුණත්, error එකක් ආවත් අනිත් කෙනෙක්ට film එකක් ගන්න පුළුවන් වෙන්න reset කරනවා
+        isUploading = false; 
+    }
 });
 
 
