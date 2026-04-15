@@ -600,7 +600,7 @@ const res = response.data;
 
 
 
-let isUploading = false;
+//let isUploading = false;
 
 cmd({
   pattern: "paka",
@@ -614,10 +614,10 @@ async (conn, mek, m, { from, q, isSudo,isOwner,isMe,isPre, reply }) => {
 		
 
   if (!q) return reply("*❗ Missing download data!*");
-  if (isUploading) return reply("*⏳ Another upload is in progress…*");
+ // if (isUploading) return reply("*⏳ Another upload is in progress…*");
 
  // try {
-    isUploading = true;
+ //   isUploading = true;
 
     console.log(`🤹🏼‍♂️ Final-dl:`, q);
 
@@ -699,7 +699,7 @@ async function resizeImage(buffer, width, height) {
     reply("*❗ Error while downloading*");
   }
 
-  isUploading = false;
+//  isUploading = false;
 });
 
 
