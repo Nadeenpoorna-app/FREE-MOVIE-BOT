@@ -183,7 +183,7 @@ async (conn, m, mek, { from, q, prefix, isPre, isMe, isSudo, isOwner, reply }) =
                 if (!isLarge) {
                     rows.push({
                         title: `${v.size} (${v.quality})`,
-                        id: `${prefix}paka ${img}±${v.link}±${d.title}±${v.quality}`
+                        id: `${prefix}pakatv ${img}±${v.link}±${d.title}±${v.quality}`
                     });
                 }
             });
