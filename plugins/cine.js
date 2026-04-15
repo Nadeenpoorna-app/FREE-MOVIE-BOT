@@ -600,7 +600,7 @@ const res = response.data;
 
 
 
-//let isUploading = false;
+let isUploading = false;
 
 cmd({
   pattern: "paka",
@@ -612,12 +612,12 @@ async (conn, mek, m, { from, q, isSudo,isOwner,isMe,isPre, reply }) => {
 
 	 try {
 		
-
+isUploading = true;
   if (!q) return reply("*❗ Missing download data!*");
- // if (isUploading) return reply("*⏳ Another upload is in progress…*");
+  if (isUploading) return reply("*⏳ Another upload is in progress…*");
 
  // try {
- //   isUploading = true;
+   
 
     console.log(`🤹🏼‍♂️ Final-dl:`, q);
 
@@ -654,7 +654,7 @@ async (conn, mek, m, { from, q, isSudo,isOwner,isMe,isPre, reply }) => {
     if (!finalLink) {
       const gdrive = filtered.find(v => v.name === "gdrive");
       const GLink = gdrive.url;
-let res = await fg.GDriveDl(GLink.replace('https://drive.usercontent.google.com/download?id=', 'https://drive.google.com/file/d/').replace('&export=download' , '/view'))
+let res = await fg.gdrive(GLink.replace('https://drive.usercontent.google.com/download?id=', 'https://drive.google.com/file/d/').replace('&export=download' , '/view'))
 
 if (gdrive) finalLink = res.downloadUrl;
     }
@@ -699,7 +699,7 @@ async function resizeImage(buffer, width, height) {
     reply("*❗ Error while downloading*");
   }
 
-//  isUploading = false;
+ isUploading = false;
 });
 
 
